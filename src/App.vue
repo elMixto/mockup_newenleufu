@@ -9,18 +9,20 @@ import QuoterSidebar from './components/QuoterSidebar.vue';
 // Estado de Diseño Activo (INTEGRACIÓN MULTI-MOCKUP)
 const activeVariant = ref<'modern' | 'traditional'>('modern');
 
-// Router simulado para el Mockup SPA: 'home' | 'catalog' | 'about' | 'contact' | 'experience' | 'checkout'
+// Router simulado para el Mockup SPA: 'home' | 'catalog' | 'about' | 'contact' | 'experience'
 const currentRoute = ref('home'); 
 const selectedExperienceId = ref(1);
-
-// Paso actual del checkout (REQUERIMIENTOS: Paso intermedio de calendario)
-const checkoutStep = ref(1); // 1: Disponibilidad y Calendario, 2: Formulario de Datos y Pago
 
 // Lógica de carrusel de imágenes/videos para la ficha técnica
 const currentMediaIndex = ref(0);
 
 // Estado de reproducción del video activo en el carrusel
 const isVideoPlaying = ref(false);
+
+// Estado del modal de Checkout/Pago integrado
+const isCheckoutModalOpen = ref(false);
+const isPaymentProcessing = ref(false);
+const isPaymentSuccess = ref(false);
 
 // Datos reales de las 6 Experiencias oficiales extraídas del sitio web
 const experiences = [
@@ -74,10 +76,10 @@ const experiences = [
     shortName: 'Educación Ambiental / Environmental Education',
     duration: '5 horas (09:00 a 14:00 hrs)', 
     price: 15000, 
-    groupPrice: 120000,
+    groupPrice: 120000, // Precio grupal para grupos escolares
     desc: 'Programa orientado a Colegios que buscan generar instancias de aprendizaje fuera del aula, 100% vivencial en la Reserva Natural Trawünko.',
     longDescParagraphs: [
-      'Qué se vive: Una salida de terreno totalmente interactiva y lúdica donde los estudiantes de enseñanza básica o media exploran de primera mano la biodiversidad de la selva valdiviana. Es un aula abierta en medio de la Reserva Trawünko, donde el bosque nativo enseña con sus formas, colores and sonidos.',
+      'Qué se vive: Una salida de terreno totalmente interactiva y lúdica donde los estudiantes de enseñanza básica o media exploran de primera mano la biodiversidad de la selva valdiviana. Es un aula abierta en medio de la Reserva Trawünko, donde el bosque nativo enseña con sus formas, colores y sonidos.',
       'Qué se aprende: Se aprenden objetivos científicos y ecológicos alineados con el currículum escolar, tales como los ciclos biogeoquímicos, interdependencia de las especies, flora y fauna autóctona, y la importancia vital de la conservación ecológica desde el punto de vista de la cultura mapuche.',
       'Qué se siente: Los estudiantes experimentarán una estimulación profunda de todos los sentidos a través del tacto con cortezas, el aroma de hojas nativas, y el asombro del avistamiento de aves silvestres, fomentando un profundo respeto por el medio ambiente y el trabajo cooperativo.'
     ],
@@ -356,16 +358,34 @@ const navigateTo = (route: string, id?: number) => {
     currentMediaIndex.value = 0;
     isVideoPlaying.value = false;
   }
-  if (route === 'checkout') {
-    checkoutStep.value = 1;
-  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
+// Al confirmar en el cotizador lateral, abrimos el modal directamente (REQUERIMIENTO: Todo integrado en la misma vista)
 const handleQuoterBooking = (data: { experienceId: number; adults: number; students: number; date: string; includePhotos: boolean }) => {
   activeBooking.value = data;
   selectedExperienceId.value = data.experienceId;
-  navigateTo('checkout');
+  
+  // Abrimos el modal de pago integrado
+  isPaymentSuccess.value = false;
+  isPaymentProcessing.value = false;
+  isCheckoutModalOpen.value = true;
+};
+
+// Simulación de procesamiento de pago
+const processPaymentMock = () => {
+  isPaymentProcessing.value = true;
+  setTimeout(() => {
+    isPaymentProcessing.value = false;
+    isPaymentSuccess.value = true;
+  }, 2500); // 2.5s de simulación de pasarela Webpay/Stripe
+};
+
+// Cerrar modal de checkout
+const closeCheckoutModal = () => {
+  isCheckoutModalOpen.value = false;
+  isPaymentSuccess.value = false;
+  isPaymentProcessing.value = false;
 };
 
 // Image gallery controllers
@@ -386,45 +406,6 @@ const prevMedia = () => {
 const selectMedia = (idx: number) => {
   currentMediaIndex.value = idx;
   isVideoPlaying.value = false;
-};
-
-// Mock data para el calendario de disponibilidad de Junio 2026
-const calendarDays = [
-  { day: 1, available: true, status: 'disponible' },
-  { day: 2, available: true, status: 'disponible' },
-  { day: 3, available: true, status: 'disponible' },
-  { day: 4, available: false, status: 'completo' },
-  { day: 5, available: true, status: 'disponible' },
-  { day: 6, available: true, status: 'disponible' },
-  { day: 7, available: false, status: 'pasado' },
-  { day: 8, available: true, status: 'disponible' },
-  { day: 9, available: true, status: 'disponible' },
-  { day: 10, available: true, status: 'disponible' },
-  { day: 11, available: false, status: 'completo' },
-  { day: 12, available: true, status: 'disponible' },
-  { day: 13, available: true, status: 'disponible' },
-  { day: 14, available: false, status: 'pasado' },
-  { day: 15, available: true, status: 'disponible' },
-  { day: 16, available: true, status: 'disponible' },
-  { day: 17, available: true, status: 'disponible' },
-  { day: 18, available: false, status: 'completo' },
-  { day: 19, available: true, status: 'disponible' },
-  { day: 20, available: true, status: 'disponible' },
-  { day: 21, available: false, status: 'pasado' },
-  { day: 22, available: true, status: 'disponible' },
-  { day: 23, available: true, status: 'disponible' },
-  { day: 24, available: true, status: 'disponible' },
-  { day: 25, available: true, status: 'disponible' },
-  { day: 26, available: false, status: 'completo' },
-  { day: 27, available: true, status: 'disponible' },
-  { day: 28, available: false, status: 'pasado' },
-  { day: 29, available: true, status: 'disponible' },
-  { day: 30, available: true, status: 'disponible' }
-];
-
-const selectCalendarDate = (day: number) => {
-  const dayStr = day < 10 ? `0${day}` : `${day}`;
-  activeBooking.value.date = `2026-06-${dayStr}`;
 };
 
 const formattedBookingDate = computed(() => {
@@ -487,7 +468,7 @@ onMounted(() => {
             Únete a nosotros en un viaje inolvidable al corazón de la cultura mapuche. Ven a conocer la riqueza cultural del Wallmapu.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <AppButton variant="primary" :active-variant="activeVariant" size="lg" @click="navigateTo('checkout')">
+            <AppButton variant="primary" :active-variant="activeVariant" size="lg" @click="navigateTo('catalog')">
               Reservar Ahora
             </AppButton>
             <AppButton variant="outline" :active-variant="activeVariant" size="lg" @click="navigateTo('catalog')">
@@ -816,14 +797,19 @@ onMounted(() => {
         <!-- Contenido Ficha -->
         <div class="lg:col-span-2 space-y-10">
           
-          <!-- Título y Media Gallery -->
+          <!-- Título y Media Gallery / Video responsivo (Sección 2.2) -->
           <div>
             <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 leading-tight tracking-tight" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold text-3xl' : ''">
               {{ activeExperience.name }}
             </h1>
             
             <!-- Carrusel Principal Multimodal (Soporta Videos o Imágenes) -->
-            <div class="relative bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-150 p-2">
+            <div 
+              class="relative bg-white p-2"
+              :class="activeVariant === 'traditional' 
+                ? 'rounded-md shadow-lg border-2 border-(--color-gold-newen)/15' 
+                : 'rounded-3xl shadow-lg border border-gray-150'"
+            >
               <div class="relative h-64 sm:h-[450px] w-full rounded-2xl overflow-hidden bg-gray-950 flex items-center justify-center">
                 
                 <!-- Si el elemento actual es de tipo Video -->
@@ -869,8 +855,11 @@ onMounted(() => {
                   v-for="(med, idx) in activeExperience.media" 
                   :key="idx" 
                   @click="selectMedia(idx)"
-                  class="w-16 h-12 rounded-lg overflow-hidden border-2 transition-all shrink-0 relative"
-                  :class="currentMediaIndex === idx ? 'border-(--color-green-newen) scale-105' : 'border-transparent opacity-60 hover:opacity-100'"
+                  class="w-16 h-12 overflow-hidden border-2 transition-all shrink-0 relative"
+                  :class="[
+                    activeVariant === 'traditional' ? 'rounded-md' : 'rounded-lg',
+                    currentMediaIndex === idx ? 'border-(--color-green-newen) scale-105' : 'border-transparent opacity-60 hover:opacity-100'
+                  ]"
                 >
                   <img :src="med.url" class="w-full h-full object-cover" />
                   <div v-if="med.type === 'video'" class="absolute inset-0 flex items-center justify-center bg-black/30 text-white">
@@ -894,7 +883,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- Ficha Técnica Completa (Tabla requerida Sección 2.2) -->
+          <!-- Ficha Técnica Completa -->
           <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
             <h3 class="text-2xl font-bold text-gray-900 border-b border-gray-100 pb-4 mb-6 flex items-center gap-2" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">
               <svg class="w-6 h-6 text-(--color-green-newen)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -956,7 +945,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- Reseñas del Servicio Específicas de esta ficha (Sección 2.2) -->
+          <!-- Reseñas del Servicio Específicas de esta ficha -->
           <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
             <h3 class="text-2xl font-bold text-gray-900 border-b border-gray-100 pb-3 mb-2 flex items-center gap-2" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">
               <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
@@ -1009,214 +998,193 @@ onMounted(() => {
         </div>
       </section>
     </template>
-    
+
+    <!-- Footer modularizado -->
+    <AppFooter :active-variant="activeVariant" />
+
     <!-- ============================================== -->
-    <!-- VIEW: CHECKOUT / CARRITO                       -->
+    <!-- MODAL INTEGRADO DE CHECKOUT Y PAGO (MODAL UX)  -->
     <!-- ============================================== -->
-    <template v-if="currentRoute === 'checkout'">
-      <div class="bg-gray-100 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-sm text-gray-500">
-          <a href="#" @click.prevent="navigateTo('home')" class="hover:text-(--color-green-newen)">Inicio</a>
-          <span class="mx-2">/</span>
-          <span class="text-gray-900 font-medium">Finalizar Reserva</span>
+    <div 
+      v-if="isCheckoutModalOpen" 
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto animate-fade-in"
+    >
+      <div 
+        class="bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative border border-gray-200 max-h-[90vh]"
+        :class="activeVariant === 'traditional' ? 'theme-traditional bg-(--color-crema-newen) wood-texture' : 'theme-modern'"
+      >
+        <!-- Botón de Cerrar Modal -->
+        <button 
+          @click="closeCheckoutModal" 
+          class="absolute top-4 right-4 z-30 text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 p-2.5 rounded-full transition-colors focus:outline-none"
+          aria-label="Cerrar"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <!-- Pantalla de Éxito de Pago -->
+        <div v-if="isPaymentSuccess" class="w-full p-12 text-center flex flex-col items-center justify-center space-y-6">
+          <div class="w-20 h-20 rounded-full bg-green-100 text-(--color-green-newen) flex items-center justify-center shadow-lg border border-green-200">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+          </div>
+          <h3 class="text-3xl font-extrabold text-gray-900" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">
+            ¡Reserva Confirmada con Éxito!
+          </h3>
+          <p class="text-gray-600 max-w-md mx-auto">
+            Muchas gracias <span class="font-bold text-gray-900">{{ checkoutForm.fullName }}</span>. Tu transacción ha sido procesada de manera segura.
+          </p>
+          <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-left max-w-sm w-full space-y-3 font-mono text-xs text-gray-600">
+            <div class="flex justify-between"><span class="font-bold">Código de Reserva:</span> <span class="text-green-700 font-extrabold">NL-2026-X84</span></div>
+            <div class="flex justify-between"><span>Transacción:</span> <span>{{ checkoutForm.paymentMethod === 'webpay' ? 'WEBPAY-PLUS-4820' : 'STRIPE-CH-9302' }}</span></div>
+            <div class="flex justify-between"><span>Fecha de salida:</span> <span class="font-bold text-gray-900">{{ formattedBookingDate }}</span></div>
+            <div class="flex justify-between"><span>Total Cobrado:</span> <span class="font-bold text-green-700">{{ formatCLP(totalPrice) }}</span></div>
+          </div>
+          <p class="text-xs text-gray-400">
+            Hemos enviado un correo automático de confirmación con las instrucciones de llegada y los contactos de emergencia a <span class="font-bold">{{ checkoutForm.email }}</span>.
+          </p>
+          <AppButton variant="primary" :active-variant="activeVariant" @click="closeCheckoutModal" class="px-8 py-3">
+            Entendido / Finalizar
+          </AppButton>
         </div>
-      </div>
-      
-      <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 w-full">
-        
-        <!-- Flujo Multistep de Checkout (Paso Intermedio de Calendario) -->
-        <div class="lg:col-span-2 space-y-8">
-          
-          <!-- Indicador visual del Paso (Stepper) -->
-          <div class="bg-white p-6 rounded-3xl border border-gray-200 flex justify-between items-center shadow-sm">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" :class="checkoutStep === 1 ? 'bg-(--color-green-newen) text-white' : 'bg-green-100 text-(--color-green-newen)'">1</div>
-              <span class="font-bold text-sm" :class="checkoutStep === 1 ? 'text-gray-950' : 'text-gray-400'">Disponibilidad</span>
-            </div>
-            <div class="flex-1 h-0.5 bg-gray-200 mx-4"></div>
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" :class="checkoutStep === 2 ? 'bg-(--color-green-newen) text-white' : 'bg-gray-200 text-gray-500'">2</div>
-              <span class="font-bold text-sm" :class="checkoutStep === 2 ? 'text-gray-950' : 'text-gray-400'">Datos de Contacto y Pago</span>
-            </div>
-          </div>
 
-          <!-- PASO 1: Calendario de Disponibilidad (PASO INTERMEDIO REQUERIDO) -->
-          <div v-if="checkoutStep === 1" class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
-            <div class="border-b border-gray-100 pb-3">
-              <h3 class="text-2xl font-extrabold text-gray-900" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">Selecciona fecha de disponibilidad</h3>
-              <p class="text-sm text-gray-500 mt-1">Nuestras salidas están sujetas a condiciones climáticas y capacidad. Revisa el calendario para reservar.</p>
-            </div>
+        <!-- Pantalla de Procesando Pago (Loader) -->
+        <div v-else-if="isPaymentProcessing" class="w-full p-12 text-center flex flex-col items-center justify-center space-y-6 min-h-[400px]">
+          <div class="w-16 h-16 border-4 border-(--color-green-newen) border-t-transparent rounded-full animate-spin"></div>
+          <h3 class="text-2xl font-bold text-gray-900" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">
+            Conectando con la Pasarela de Pago...
+          </h3>
+          <p class="text-sm text-gray-500 max-w-xs mx-auto animate-pulse">
+            Procesando transacción segura mediante {{ checkoutForm.paymentMethod === 'webpay' ? 'Webpay Plus (Transbank)' : 'Stripe Checkout' }}. Por favor no cierres esta ventana.
+          </p>
+        </div>
+
+        <!-- Vista del Checkout Integrado (Formulario y Resumen) -->
+        <template v-else>
+          <!-- Izquierda: Formulario de Datos -->
+          <div class="w-full md:w-3/5 p-8 overflow-y-auto max-h-[85vh] space-y-6">
+            <h3 class="text-2xl font-extrabold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">
+              <svg class="w-5 h-5 text-(--color-green-newen)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+              Datos del Visitante
+            </h3>
             
-            <div class="max-w-md mx-auto bg-gray-50 p-6 rounded-2xl border border-gray-200" :class="activeVariant === 'traditional' ? 'wood-texture' : ''">
-              <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-3">
-                <span class="font-bold text-gray-800">Junio 2026</span>
-                <span class="text-xs bg-green-100 text-green-800 font-bold px-2 py-1 rounded-full uppercase">Temporada Alta</span>
-              </div>
-              
-              <!-- Días de la semana -->
-              <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-gray-500 mb-2">
-                <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span><span>Do</span>
-              </div>
-              
-              <!-- Cuadrícula de días -->
-              <div class="grid grid-cols-7 gap-2">
-                <button 
-                  v-for="dayObj in calendarDays" 
-                  :key="dayObj.day"
-                  type="button"
-                  @click="dayObj.available ? selectCalendarDate(dayObj.day) : null"
-                  :disabled="!dayObj.available"
-                  class="h-10 text-xs font-bold rounded-lg flex flex-col items-center justify-center relative transition-all cursor-pointer focus:outline-none"
-                  :class="[
-                    dayObj.status === 'pasado' ? 'bg-gray-100 text-gray-300 cursor-not-allowed' : '',
-                    dayObj.status === 'completo' ? 'bg-red-50 text-red-300 line-through cursor-not-allowed' : '',
-                    dayObj.status === 'disponible' && activeBooking.date !== `2026-06-${dayObj.day < 10 ? '0'+dayObj.day : dayObj.day}` ? 'bg-white hover:bg-green-50 border border-gray-200 text-gray-700' : '',
-                    activeBooking.date === `2026-06-${dayObj.day < 10 ? '0'+dayObj.day : dayObj.day}` ? 'bg-(--color-green-newen) text-white shadow-md ring-2 ring-green-300 scale-105' : ''
-                  ]"
-                >
-                  <span>{{ dayObj.day }}</span>
-                  <span v-if="dayObj.status === 'disponible' && activeBooking.date !== `2026-06-${dayObj.day < 10 ? '0'+dayObj.day : dayObj.day}`" class="w-1 h-1 bg-green-500 rounded-full mt-0.5"></span>
-                </button>
-              </div>
-
-              <!-- Simbología -->
-              <div class="flex gap-4 justify-center text-xs text-gray-500 mt-6 border-t border-gray-200 pt-4">
-                <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-white border border-gray-300 rounded-full"></span> Disponible</div>
-                <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-red-100 rounded-full"></span> Completo</div>
-                <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-gray-100 rounded-full"></span> Pasado / Cerrado</div>
-              </div>
-            </div>
-
-            <div v-if="activeBooking.date" class="bg-green-50 text-green-800 p-4 rounded-xl text-sm font-semibold flex items-center justify-between border border-green-200">
-              <span>Fecha Seleccionada con Éxito: {{ formattedBookingDate }}</span>
-              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-
-            <div class="flex justify-end pt-4">
-              <AppButton 
-                variant="primary" 
-                :disabled="!activeBooking.date" 
-                :active-variant="activeVariant"
-                @click="checkoutStep = 2"
-                class="px-8 py-3.5 flex items-center gap-2"
-              >
-                Continuar al Formulario de Pago
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-              </AppButton>
-            </div>
-          </div>
-
-          <!-- PASO 2: Formulario de Datos del Visitante y Pago -->
-          <div v-if="checkoutStep === 2" class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
-            <h3 class="text-xl font-bold text-gray-900 border-b border-gray-100 pb-3" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">Datos de Contacto</h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Nombre completo</label>
-                <input type="text" v-model="checkoutForm.fullName" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 focus:ring-(--color-green-newen) focus:border-(--color-green-newen) outline-none" required />
+                <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Nombre Completo</label>
+                <input type="text" v-model="checkoutForm.fullName" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 outline-none focus:border-(--color-green-newen) text-sm font-semibold" required placeholder="Juan Pérez" />
               </div>
               <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Correo electrónico</label>
-                <input type="email" v-model="checkoutForm.email" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 focus:ring-(--color-green-newen) focus:border-(--color-green-newen) outline-none" required />
+                <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Correo Electrónico</label>
+                <input type="email" v-model="checkoutForm.email" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 outline-none focus:border-(--color-green-newen) text-sm font-semibold" required placeholder="tu@correo.com" />
               </div>
               <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Teléfono</label>
-                <input type="tel" v-model="checkoutForm.phone" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 focus:ring-(--color-green-newen) focus:border-(--color-green-newen) outline-none" required />
+                <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Teléfono de Contacto</label>
+                <input type="tel" v-model="checkoutForm.phone" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 outline-none focus:border-(--color-green-newen) text-sm font-semibold" required placeholder="+56 9 1234 5678" />
               </div>
               <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">País de procedencia</label>
-                <input type="text" v-model="checkoutForm.country" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 focus:ring-(--color-green-newen) focus:border-(--color-green-newen) outline-none" required />
+                <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">País de Procedencia</label>
+                <input type="text" v-model="checkoutForm.country" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 outline-none focus:border-(--color-green-newen) text-sm font-semibold" required placeholder="Chile" />
               </div>
             </div>
             
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-2">Idioma preferido</label>
-              <select v-model="checkoutForm.language" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 focus:ring-(--color-green-newen) focus:border-(--color-green-newen) outline-none">
+            <div class="text-sm">
+              <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Idioma de la Reserva</label>
+              <select v-model="checkoutForm.language" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 outline-none focus:border-(--color-green-newen) text-sm font-semibold">
                 <option value="es">Español</option>
                 <option value="en">Inglés</option>
               </select>
             </div>
             
-            <div>
-              <label class="block text-sm font-bold text-gray-700 mb-2">Observaciones o requerimientos alimentarios</label>
-              <textarea v-model="checkoutForm.observations" rows="3" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 focus:ring-(--color-green-newen) focus:border-(--color-green-newen) outline-none"></textarea>
+            <div class="text-sm">
+              <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Observaciones Alimentarias o Requerimientos</label>
+              <textarea v-model="checkoutForm.observations" rows="2" class="w-full rounded-xl border-gray-200 border-2 bg-gray-50 px-4 py-3 outline-none focus:border-(--color-green-newen) text-sm" placeholder="Indícanos si tienes alergias, vegetarianismo, etc."></textarea>
             </div>
             
-            <h3 class="text-xl font-bold text-gray-900 border-b border-gray-100 pb-3 mt-8 pt-4" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">Método de Pago</h3>
-            
+            <!-- Selector de pasarela integrado -->
             <div class="space-y-3">
-              <label class="flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-colors" :class="checkoutForm.paymentMethod === 'webpay' ? 'border-(--color-green-newen) bg-green-50' : 'border-gray-200 hover:bg-gray-50'">
-                <input type="radio" v-model="checkoutForm.paymentMethod" value="webpay" class="w-5 h-5 text-(--color-green-newen) focus:ring-(--color-green-newen)" />
-                <span class="font-bold text-gray-900">Webpay Plus (Tarjetas Nacionales en CLP)</span>
-              </label>
-              <label class="flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-colors" :class="checkoutForm.paymentMethod === 'stripe' ? 'border-(--color-green-newen) bg-green-50' : 'border-gray-200 hover:bg-gray-50'">
-                <input type="radio" v-model="checkoutForm.paymentMethod" value="stripe" class="w-5 h-5 text-(--color-green-newen) focus:ring-(--color-green-newen)" />
-                <span class="font-bold text-gray-900">Stripe / PayPal (Tarjetas Internacionales en USD/EUR)</span>
-              </label>
+              <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Selecciona Pasarela de Pago Seguro</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <label class="flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-colors" :class="checkoutForm.paymentMethod === 'webpay' ? 'border-(--color-green-newen) bg-green-50/50' : 'border-gray-200 bg-gray-50/30 hover:bg-gray-100'">
+                  <input type="radio" v-model="checkoutForm.paymentMethod" value="webpay" class="w-4 h-4 text-(--color-green-newen) focus:ring-(--color-green-newen)" />
+                  <div class="min-w-0 flex-1">
+                    <span class="font-bold text-gray-900 block">Webpay Plus</span>
+                    <span class="text-[10px] text-gray-400">Tarjetas Nacionales en CLP</span>
+                  </div>
+                </label>
+                <label class="flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-colors" :class="checkoutForm.paymentMethod === 'stripe' ? 'border-(--color-green-newen) bg-green-50/50' : 'border-gray-200 bg-gray-50/30 hover:bg-gray-100'">
+                  <input type="radio" v-model="checkoutForm.paymentMethod" value="stripe" class="w-4 h-4 text-(--color-green-newen) focus:ring-(--color-green-newen)" />
+                  <div class="min-w-0 flex-1">
+                    <span class="font-bold text-gray-900 block">Stripe / PayPal</span>
+                    <span class="text-[10px] text-gray-400">Tarjetas Internacionales en USD</span>
+                  </div>
+                </label>
+              </div>
             </div>
             
-            <div class="bg-orange-50 text-orange-800 p-4 rounded-xl text-sm mt-6">
-              <p class="font-bold mb-1">Política de cancelación</p>
-              <p>Cancelación gratuita hasta 48 horas antes de la experiencia. Reembolso del 50% entre 48 y 24 horas. Sin reembolso con menos de 24 horas de anticipación.</p>
-            </div>
-
-            <div class="flex justify-between pt-6">
-              <AppButton variant="light" :active-variant="activeVariant" @click="checkoutStep = 1" class="px-6 py-3">
-                Volver a Calendario
-              </AppButton>
-              <AppButton variant="primary" :active-variant="activeVariant" class="px-8 py-3.5 flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                Pagar de forma segura
-              </AppButton>
+            <div class="bg-amber-50 text-amber-900 p-4 rounded-xl text-xs flex gap-2 border border-amber-200/50">
+              <svg class="w-5 h-5 text-amber-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              <div>
+                <p class="font-bold">Política de cancelación obligatoria</p>
+                <p class="mt-0.5 opacity-85">Cancelación gratuita hasta 48 horas antes de la experiencia. Reembolso del 50% entre 48 y 24 horas. Sin reembolso con menos de 24 horas.</p>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <aside class="lg:col-span-1">
-          <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 sticky top-28">
-            <h3 class="text-xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-3" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">Resumen de Reserva</h3>
-            
-            <div class="space-y-4 mb-6">
-              <div>
-                <span class="text-xs text-gray-500 block">Experiencia</span>
-                <span class="font-bold text-gray-900" :class="activeVariant === 'traditional' ? 'font-serif-artisanal text-base' : ''">{{ experiences.find(e => e.id === activeBooking.experienceId)?.name }}</span>
-              </div>
-              <div>
-                <span class="text-xs text-gray-500 block">Fecha Escogida</span>
-                <span class="font-bold text-(--color-green-newen)">{{ formattedBookingDate || 'Selección pendiente' }}</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-600">{{ activeBooking.adults }} x Adulto</span>
-                <span class="font-medium text-gray-900">{{ formatCLP(activeBooking.adults * (experiences.find(e => e.id === activeBooking.experienceId)?.price || 0)) }}</span>
-              </div>
-              <div v-if="activeBooking.students > 0" class="flex justify-between text-sm">
-                <span class="text-gray-600">{{ activeBooking.students }} x Estudiante</span>
-                <span class="font-medium text-gray-900">{{ formatCLP(activeBooking.students * (experiences.find(e => e.id === activeBooking.experienceId)?.price || 0) * 0.8) }}</span>
-              </div>
-              <div v-if="activeBooking.includePhotos" class="flex justify-between text-sm">
-                <span class="text-gray-600">Servicio de Fotografía</span>
-                <span class="font-medium text-gray-900">{{ formatCLP(25000) }}</span>
-              </div>
-            </div>
-            
-            <div class="bg-green-50/50 rounded-2xl p-6 border border-green-100 mt-6">
-              <div class="flex justify-between items-end">
-                <span class="text-sm text-gray-500 font-bold mb-1.5">Total a Pagar:</span>
-                <div class="text-right">
-                  <div class="text-3xl font-extrabold text-(--color-green-newen) tracking-tight" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">{{ formatCLP(totalPrice) }}</div>
-                  <div v-if="checkoutForm.paymentMethod === 'stripe'" class="text-sm text-gray-500 font-medium mt-1">Aprox. {{ formatUSD(totalPrice) }}</div>
+
+          <!-- Derecha: Resumen de Reserva -->
+          <div class="w-full md:w-2/5 bg-gray-50 border-l border-gray-100 p-8 flex flex-col justify-between max-h-[85vh]">
+            <div class="space-y-6 overflow-y-auto">
+              <h3 class="text-xl font-bold text-gray-900 border-b border-gray-200 pb-3" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">Resumen del Pedido</h3>
+              
+              <div class="space-y-4 text-sm">
+                <div>
+                  <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Experiencia</span>
+                  <span class="font-bold text-gray-900" :class="activeVariant === 'traditional' ? 'font-serif-artisanal text-base' : ''">{{ experiences.find(e => e.id === activeBooking.experienceId)?.name }}</span>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Fecha de Reserva</span>
+                  <span class="font-bold text-(--color-green-newen)">{{ formattedBookingDate }}</span>
+                </div>
+                <div class="flex justify-between border-t border-gray-100 pt-3">
+                  <span class="text-gray-600">{{ activeBooking.adults }} x Adulto</span>
+                  <span class="font-bold text-gray-900">{{ formatCLP(activeBooking.adults * (experiences.find(e => e.id === activeBooking.experienceId)?.price || 0)) }}</span>
+                </div>
+                <div v-if="activeBooking.students > 0" class="flex justify-between">
+                  <span class="text-gray-600">{{ activeBooking.students }} x Estudiante (Dcto 20%)</span>
+                  <span class="font-bold text-gray-900">{{ formatCLP(activeBooking.students * (experiences.find(e => e.id === activeBooking.experienceId)?.price || 0) * 0.8) }}</span>
+                </div>
+                <div v-if="activeBooking.includePhotos" class="flex justify-between border-b border-gray-100 pb-3">
+                  <span class="text-gray-600">Servicio de Fotografía</span>
+                  <span class="font-bold text-gray-900">{{ formatCLP(25000) }}</span>
                 </div>
               </div>
             </div>
+
+            <div class="mt-8 space-y-4">
+              <div class="bg-white rounded-2xl p-5 border border-gray-200 shadow-inner">
+                <div class="flex justify-between items-end">
+                  <span class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Monto Total:</span>
+                  <div class="text-right">
+                    <div class="text-3xl font-extrabold text-(--color-green-newen) tracking-tight" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">{{ formatCLP(totalPrice) }}</div>
+                    <div class="text-xs text-gray-400 font-medium mt-1">Aprox. {{ formatUSD(totalPrice) }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <AppButton 
+                variant="primary" 
+                :active-variant="activeVariant" 
+                class="w-full py-4 text-base"
+                :disabled="!checkoutForm.fullName || !checkoutForm.email || !checkoutForm.phone"
+                @click="processPaymentMock"
+              >
+                Proceder al Pago Seguro
+              </AppButton>
+            </div>
           </div>
-        </aside>
-      </main>
-    </template>
+        </template>
+      </div>
+    </div>
 
-    <!-- Footer modularizado -->
-    <AppFooter :active-variant="activeVariant" />
-
-    <!-- FLOATING INTERACTIVE DESIGN SWITCHER (INTEGRACIÓN TOTAL EN UNA SOLA APP) -->
+    <!-- FLOATING INTERACTIVE DESIGN SWITCHER -->
     <div class="fixed bottom-6 left-6 z-50 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-gray-200 flex flex-col gap-2">
       <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest block text-center border-b border-gray-100 pb-1.5 mb-1">EVALUAR PROPUESTAS</span>
       <div class="flex gap-2">

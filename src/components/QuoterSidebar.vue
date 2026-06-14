@@ -73,6 +73,51 @@ const handleBookingSubmit = () => {
     includePhotos: includePhoto.value
   });
 };
+
+// Mock data para el calendario de disponibilidad de Junio 2026 integrado en el cotizador (Sección 2.4)
+const calendarDays = [
+  { day: 1, available: true, status: 'disponible' },
+  { day: 2, available: true, status: 'disponible' },
+  { day: 3, available: true, status: 'disponible' },
+  { day: 4, available: false, status: 'completo' },
+  { day: 5, available: true, status: 'disponible' },
+  { day: 6, available: true, status: 'disponible' },
+  { day: 7, available: false, status: 'pasado' }, // Domingos cerrados
+  { day: 8, available: true, status: 'disponible' },
+  { day: 9, available: true, status: 'disponible' },
+  { day: 10, available: true, status: 'disponible' },
+  { day: 11, available: false, status: 'completo' },
+  { day: 12, available: true, status: 'disponible' },
+  { day: 13, available: true, status: 'disponible' },
+  { day: 14, available: false, status: 'pasado' },
+  { day: 15, available: true, status: 'disponible' },
+  { day: 16, available: true, status: 'disponible' },
+  { day: 17, available: true, status: 'disponible' },
+  { day: 18, available: false, status: 'completo' },
+  { day: 19, available: true, status: 'disponible' },
+  { day: 20, available: true, status: 'disponible' },
+  { day: 21, available: false, status: 'pasado' },
+  { day: 22, available: true, status: 'disponible' },
+  { day: 23, available: true, status: 'disponible' },
+  { day: 24, available: true, status: 'disponible' },
+  { day: 25, available: true, status: 'disponible' },
+  { day: 26, available: false, status: 'completo' },
+  { day: 27, available: true, status: 'disponible' },
+  { day: 28, available: false, status: 'pasado' },
+  { day: 29, available: true, status: 'disponible' },
+  { day: 30, available: true, status: 'disponible' }
+];
+
+const selectCalendarDate = (day: number) => {
+  const dayStr = day < 10 ? `0${day}` : `${day}`;
+  selectedDate.value = `2026-06-${dayStr}`;
+};
+
+const formattedSelectedDate = computed(() => {
+  if (!selectedDate.value) return '';
+  const [_, __, day] = selectedDate.value.split('-');
+  return `${day}/06/2026`;
+});
 </script>
 
 <template>
@@ -111,7 +156,7 @@ const handleBookingSubmit = () => {
         <div class="relative">
           <select 
             v-model="localSelectedId" 
-            class="w-full appearance-none border-2 bg-stone-50 px-4 py-3.5 focus:border-(--color-green-newen) outline-none transition-colors font-semibold text-gray-700"
+            class="w-full appearance-none border-2 bg-stone-50 px-4 py-3.5 focus:border-(--color-green-newen) outline-none transition-colors font-semibold text-gray-700 text-sm"
             :class="isTraditional ? 'rounded-md border-(--color-gold-newen)/20' : 'rounded-xl border-gray-200'"
           >
             <option v-for="exp in experiences" :key="exp.id" :value="exp.id">{{ exp.shortName }}</option>
@@ -154,18 +199,56 @@ const handleBookingSubmit = () => {
         </div>
       </div>
 
-      <!-- Step 3 -->
+      <!-- Paso 3: Calendario de Disponibilidad Integrado (REQUERIMIENTOS: Calendario Central) -->
       <div>
         <label 
           class="block font-bold text-gray-700 mb-2"
           :class="isTraditional ? 'text-xs uppercase tracking-wider' : 'text-sm'"
-        >Paso 3: Fecha (Sujeto a disp.)</label>
-        <input 
-          type="date" 
-          v-model="selectedDate" 
-          class="w-full border-2 bg-stone-50 px-4 py-3 focus:ring-0 focus:border-(--color-green-newen) outline-none transition-colors text-gray-700 font-semibold"
-          :class="isTraditional ? 'rounded-md border-(--color-gold-newen)/20' : 'rounded-xl border-gray-200'"
-        />
+        >Paso 3: Fecha (Junio 2026)</label>
+        
+        <div 
+          class="p-4 border bg-stone-50 text-center"
+          :class="isTraditional ? 'rounded-md border-(--color-gold-newen)/15' : 'rounded-xl border-gray-200'"
+        >
+          <!-- Encabezado de mes -->
+          <div class="flex justify-between items-center text-xs font-bold text-gray-700 border-b border-gray-200 pb-2 mb-2">
+            <span>Junio 2026</span>
+            <span class="text-[9px] bg-green-100 text-green-800 font-bold px-1.5 py-0.5 rounded uppercase">Alta</span>
+          </div>
+          
+          <!-- Columnas de días de la semana -->
+          <div class="grid grid-cols-7 gap-1 text-[9px] font-bold text-gray-400 mb-2">
+            <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span><span>Do</span>
+          </div>
+          
+          <!-- Cuadrícula de días -->
+          <div class="grid grid-cols-7 gap-1">
+            <button 
+              v-for="dayObj in calendarDays" 
+              :key="dayObj.day"
+              type="button"
+              @click="dayObj.available ? selectCalendarDate(dayObj.day) : null"
+              :disabled="!dayObj.available"
+              class="h-7 text-[10px] font-bold rounded flex flex-col items-center justify-center relative transition-all focus:outline-none"
+              :class="[
+                dayObj.status === 'pasado' ? 'bg-gray-100 text-gray-300 cursor-not-allowed' : '',
+                dayObj.status === 'completo' ? 'bg-red-50 text-red-300 line-through cursor-not-allowed' : '',
+                dayObj.status === 'disponible' && selectedDate !== `2026-06-${dayObj.day < 10 ? '0'+dayObj.day : dayObj.day}` ? 'bg-white hover:bg-green-50 border border-gray-200 text-gray-700' : '',
+                selectedDate === `2026-06-${dayObj.day < 10 ? '0'+dayObj.day : dayObj.day}` ? 'bg-(--color-green-newen) text-white shadow-sm scale-105 font-extrabold' : ''
+              ]"
+            >
+              <span>{{ dayObj.day }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div v-if="selectedDate" class="text-xs text-green-700 font-bold mt-2 flex items-center gap-1">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+          Agendado: {{ formattedSelectedDate }}
+        </div>
+        <div v-else class="text-xs text-red-500 font-medium mt-2">
+          Selecciona una fecha disponible en el calendario
+        </div>
       </div>
 
       <!-- Step 4: Adicionales -->
@@ -208,7 +291,7 @@ const handleBookingSubmit = () => {
           <span class="text-xs text-gray-500 font-bold mb-1.5 uppercase tracking-wider">Total:</span>
           <div class="text-right">
             <div 
-              class="text-3xl font-extrabold text-gray-950 tracking-tight"
+              class="text-3xl font-extrabold text-gray-900 tracking-tight"
               :class="isTraditional ? 'font-serif-artisanal font-bold' : 'text-(--color-green-newen)'"
             >{{ formatCLP(totalPrice) }}</div>
             <div class="text-[10px] text-gray-400 font-medium mt-1">Aprox. {{ formatUSD(totalPrice) }}</div>
@@ -216,8 +299,14 @@ const handleBookingSubmit = () => {
         </div>
       </div>
 
-      <AppButton variant="primary" :active-variant="activeVariant" class="w-full py-4 text-lg" @click="handleBookingSubmit">
-        Confirmar y reservar
+      <AppButton 
+        variant="primary" 
+        :active-variant="activeVariant" 
+        class="w-full py-4 text-lg" 
+        :disabled="!selectedDate"
+        @click="handleBookingSubmit"
+      >
+        Confirmar y Reservar / Book Now
       </AppButton>
       
       <button 
