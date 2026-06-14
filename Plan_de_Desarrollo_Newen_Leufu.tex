@@ -53,7 +53,7 @@ La plataforma web de Newen Leufu se organiza en los siguientes módulos funciona
 \section{3. Estrategia Técnica y Solución de Rendimiento}
 Para garantizar la exigencia de \textbf{tiempos de carga inferiores a 3 segundos en móviles 4G} y evitar la sobrecarga ("bloat") de un WordPress tradicional con múltiples plugins de reserva y traducción, se propone una \textbf{arquitectura desacoplada (Headless)} de alto rendimiento:
 
-\begin{itemize}[label=\textcolor{greennewen}{\checkmark}]
+\begin{itemize}[label=\textcolor{greennewen}{$\bullet$}]
     \item \textbf{Frontend (SPA):} Desarrollado en Vue 3 con TypeScript y Tailwind CSS v4. Garantiza interactividad fluida, cambio de idioma instantáneo (Vue I18n) y transiciones sin recarga de navegador.
     \item \textbf{Backend \& CMS:} Headless CMS / API REST segura en Node.js que permite gestionar el catálogo de experiencias, la disponibilidad de fechas y recibir las reservas.
     \item \textbf{Pasarelas de Pago:} Integración con Webpay Plus de Transbank para pagos nacionales en CLP (Débito/Crédito) y Stripe / PayPal para turistas internacionales en USD/EUR.
