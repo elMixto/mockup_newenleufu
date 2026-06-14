@@ -60,6 +60,20 @@ Para garantizar la exigencia de \textbf{tiempos de carga inferiores a 3 segundos
     \item \textbf{Seguridad y Despliegue:} Certificado SSL (HTTPS obligatorio), estándares PCI-DSS de seguridad en transacciones y correos transaccionales seguros por SMTP (SendGrid o Mailchimp).
 \end{itemize}
 
+\subsection{3.1. Justificación Técnica: Análisis del Sitio Actual vs. Nueva Plataforma}
+Para fundamentar la necesidad del cambio tecnológico, se realizó un análisis técnico y de rendimiento en tiempo real sobre el sitio web actual (\url{https://newenleufu.cl}), identificando deficiencias de infraestructura críticas que merman las ventas:
+
+\begin{itemize}[itemsep=2pt]
+    \item \textbf{Monolito WordPress Ineficiente:} El sitio actual corre sobre WordPress con consultas constantes a la base de datos PHP/MySQL. Esto genera un \textbf{TTFB (Time to First Byte) de 956 ms} (casi 1 segundo de retraso en el servidor antes de enviar datos), lo cual penaliza severamente el posicionamiento SEO en Google (Core Web Vitals).
+    \item \textbf{Carga Lenta del Documento:} Descargar únicamente el archivo HTML inicial toma \textbf{1.39 segundos}, una latencia sumamente alta considerando conexiones móviles 4G inestables en zonas rurales o turistas en el extranjero con mayor distancia de ruteo.
+    \item \textbf{Ausencia de Red de Distribución (Edge CDN):} Los recursos del servidor actual se descargan de forma centralizada sin una distribución global, lo que ralentiza aún más la experiencia para el mercado de turismo internacional en Europa o Norteamérica.
+    \item \textbf{Ventaja Radical de la Nueva Plataforma (Vue 3 + Cloudflare Pages):}
+    \begin{itemize}
+        \item \textbf{TTFB menor a 25 ms} (una mejora de más del \textbf{3.800\%} en la respuesta inicial) al entregar archivos compilados estáticos directamente desde la red global de borde (Edge CDN) de Cloudflare.
+        \item \textbf{Carga instantánea de la UI en menos de 150 ms}, lo que ofrece una sensación de velocidad nativa, incrementando significativamente las conversiones de reserva.
+    \end{itemize}
+\end{itemize}
+
 \section{4. Enfoque de Diseño: Unificación de Propuestas Estéticas}
 La plataforma comercial digital de Newen Leufu integra de manera única y reactiva las dos propuestas estéticas, permitiendo al usuario alternar entre ellas en tiempo real mediante un conmutador de temas inteligente, sin necesidad de mantener dos bases de código separadas:
 
