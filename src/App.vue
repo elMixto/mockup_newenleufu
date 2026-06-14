@@ -776,16 +776,11 @@ onMounted(() => {
       
       <!-- Breadcrumbs -->
       <div class="bg-gray-100 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-sm text-gray-500 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-sm text-gray-500">
           <div>
             <a href="#" @click.prevent="navigateTo('home')" class="hover:text-(--color-green-newen)">Inicio</a>
             <span class="mx-2">/</span>
             <span class="text-gray-900 font-medium">{{ activeExperience.shortName }}</span>
-          </div>
-          <div class="flex gap-2 font-bold text-xs">
-            <span class="text-(--color-green-newen)">ES</span>
-            <span>|</span>
-            <span class="text-gray-400 cursor-pointer hover:text-gray-600">EN</span>
           </div>
         </div>
       </div>
