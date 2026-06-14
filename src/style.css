@@ -42,3 +42,9 @@
   background-image: radial-gradient(rgba(141, 85, 36, 0.05) 1px, transparent 0);
   background-size: 24px 24px;
 }
+
+/* Indicadores de foco mejorados para accesibilidad por teclado (WCAG 2.1 AA) */
+*:focus-visible {
+  outline: 3px solid var(--color-green-newen);
+  outline-offset: 2px;
+}
