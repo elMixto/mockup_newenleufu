@@ -66,7 +66,6 @@ Para fundamentar la necesidad del cambio tecnológico, se realizó un análisis 
 \begin{itemize}[itemsep=2pt]
     \item \textbf{Monolito WordPress Ineficiente:} El sitio actual corre sobre WordPress con consultas constantes a la base de datos PHP/MySQL. Esto genera un \textbf{TTFB (Time to First Byte) de 956 ms} (casi 1 segundo de retraso en el servidor antes de enviar datos), lo cual penaliza severamente el posicionamiento SEO en Google (Core Web Vitals).
     \item \textbf{Carga Lenta del Documento:} Descargar únicamente el archivo HTML inicial toma \textbf{1.39 segundos}, una latencia sumamente alta considerando conexiones móviles 4G inestables en zonas rurales o turistas en el extranjero con mayor distancia de ruteo.
-    \item \textbf{Ausencia de Red de Distribución (Edge CDN):} Los recursos del servidor actual se descargan de forma centralizada sin una distribución global, lo que ralentiza aún más la experiencia para el mercado de turismo internacional en Europa o Norteamérica.
     \item \textbf{Ventaja Radical de la Nueva Plataforma (Vue 3 + Cloudflare Pages):}
     \begin{itemize}
         \item \textbf{TTFB menor a 25 ms} (una mejora de más del \textbf{3.800\%} en la respuesta inicial) al entregar archivos compilados estáticos directamente desde la red global de borde (Edge CDN) de Cloudflare.
