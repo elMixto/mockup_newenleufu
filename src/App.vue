@@ -467,12 +467,9 @@ onMounted(() => {
           <p class="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light drop-shadow-lg leading-relaxed">
             Únete a nosotros en un viaje inolvidable al corazón de la cultura mapuche. Ven a conocer la riqueza cultural del Wallmapu.
           </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <div class="flex justify-center">
             <AppButton variant="primary" :active-variant="activeVariant" size="lg" @click="navigateTo('catalog')">
               Reservar Ahora
-            </AppButton>
-            <AppButton variant="outline" :active-variant="activeVariant" size="lg" @click="navigateTo('catalog')">
-              Ver Catálogo
             </AppButton>
           </div>
         </div>

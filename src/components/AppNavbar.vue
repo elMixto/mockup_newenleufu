@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import AppButton from './AppButton.vue';
 
 interface Props {
   currentRoute: string;
@@ -54,10 +53,7 @@ const handleMobileNavigate = (route: string) => {
       
       <!-- Desktop Actions -->
       <div class="hidden md:flex items-center gap-4">
-        <span class="text-sm font-bold text-gray-500 cursor-pointer hover:text-gray-900 border-r border-gray-300 pr-4">ES / EN</span>
-        <AppButton size="sm" :active-variant="activeVariant" @click="emit('navigate', 'checkout')">
-          Reservar
-        </AppButton>
+        <span class="text-sm font-bold text-gray-500 cursor-pointer hover:text-gray-900">ES / EN</span>
       </div>
 
       <!-- Hamburger Button (Mobile) -->
@@ -120,11 +116,6 @@ const handleMobileNavigate = (route: string) => {
         >
           Contacto
         </a>
-        <div class="border-t border-gray-100 pt-3">
-          <AppButton class="w-full" :active-variant="activeVariant" @click="handleMobileNavigate('checkout')">
-            Reservar Ahora
-          </AppButton>
-        </div>
       </div>
     </div>
   </header>
