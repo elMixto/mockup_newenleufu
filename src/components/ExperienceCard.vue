@@ -31,7 +31,7 @@ const isTraditional = computed(() => props.activeVariant === 'traditional');
 const visualTag = computed(() => {
   if (isTraditional.value) {
     if (props.experience.id === 1) return { text: 'Más popular', class: 'bg-(--color-green-newen) text-(--color-crema-newen)' };
-    if (props.experience.id === 2) return { text: 'Apto para grupos', class: 'bg-(--color-gold-newen) text-(--color-crema-newen)' };
+    if (props.experience.id === 2) return { text: 'Apto para grupos', class: 'bg-(--color-crema-newen) text-(--color-carbon-newen) border border-(--color-gold-newen)/50' };
     return { text: 'Nuevo', class: 'bg-(--color-carbon-newen) text-(--color-crema-newen)' };
   } else {
     if (props.experience.id === 1) return { text: 'Más popular', class: 'bg-green-100 text-green-800' };

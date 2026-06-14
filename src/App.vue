@@ -441,6 +441,7 @@ onMounted(() => {
     <!-- Header/Navbar modularizado y reactivo al tema -->
     <AppNavbar :current-route="currentRoute" :active-variant="activeVariant" @navigate="navigateTo" />
 
+    <main class="flex-grow">
     <!-- ============================================== -->
     <!-- VIEW: HOME (FRONT PAGE)                        -->
     <!-- ============================================== -->
@@ -540,7 +541,7 @@ onMounted(() => {
             <div v-for="loc in locaciones" :key="loc.name" class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <img :src="loc.img" :alt="loc.name" class="w-full h-40 object-cover" />
               <div class="p-4 text-center">
-                <h4 class="font-bold text-gray-900" :class="activeVariant === 'traditional' ? 'font-serif-artisanal text-lg' : ''">{{ loc.name }}</h4>
+                <h3 class="font-bold text-gray-900" :class="activeVariant === 'traditional' ? 'font-serif-artisanal text-lg' : ''">{{ loc.name }}</h3>
                 <p class="text-xs text-gray-500 mt-1">{{ loc.desc }}</p>
               </div>
             </div>
@@ -556,21 +557,21 @@ onMounted(() => {
             Reseñas TripAdvisor (Calificación promedio: 5.0)
           </h3>
           <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
-            <div class="bg-white/10 p-5 rounded-2xl backdrop-blur-sm border border-white/10 flex flex-col justify-between">
+            <div class="bg-black/20 p-5 rounded-2xl backdrop-blur-sm border border-white/10 flex flex-col justify-between">
               <p class="italic text-xs mb-4 leading-relaxed">"La experiencia mapuche en Newen Leufu fue verdaderamente transformadora. La conexión con la naturaleza y la cultura fue profunda."</p>
-              <span class="font-bold text-(--color-gold-newen) text-xs">— María Eliana Leóz</span>
+              <span class="font-bold text-(--color-crema-newen) text-xs">— María Eliana Leóz</span>
             </div>
-            <div class="bg-white/10 p-5 rounded-2xl backdrop-blur-sm border border-white/10 flex flex-col justify-between">
+            <div class="bg-black/20 p-5 rounded-2xl backdrop-blur-sm border border-white/10 flex flex-col justify-between">
               <p class="italic text-xs mb-4 leading-relaxed">"Durante mi visita sentí una profunda sensación de paz y pertenencias. Las tradiciones que compartieron fueron esclarecedoras y hermosas."</p>
-              <span class="font-bold text-(--color-gold-newen) text-xs">— Soledad Gómez</span>
+              <span class="font-bold text-(--color-crema-newen) text-xs">— Soledad Gómez</span>
             </div>
-            <div class="bg-white/10 p-5 rounded-2xl backdrop-blur-sm border border-white/10 flex flex-col justify-between">
+            <div class="bg-black/20 p-5 rounded-2xl backdrop-blur-sm border border-white/10 flex flex-col justify-between">
               <p class="italic text-xs mb-4 leading-relaxed">"Newen Leufu ofrece un viaje único al corazón de la cultura mapuche. La hospitalidad y el conocimiento compartido fueron excepcionales."</p>
-              <span class="font-bold text-(--color-gold-newen) text-xs">— Luis Zúñiga</span>
+              <span class="font-bold text-(--color-crema-newen) text-xs">— Luis Zúñiga</span>
             </div>
-            <div class="bg-white/10 p-5 rounded-2xl backdrop-blur-sm border border-white/10 flex flex-col justify-between">
+            <div class="bg-black/20 p-5 rounded-2xl backdrop-blur-sm border border-white/10 flex flex-col justify-between">
               <p class="italic text-xs mb-4 leading-relaxed">"El entorno natural de la Reserva Trawünko es majestuoso. El juego de Palin y la comida en la ruka fueron insuperables."</p>
-              <span class="font-bold text-(--color-gold-newen) text-xs">— Andrés Ramos</span>
+              <span class="font-bold text-(--color-crema-newen) text-xs">— Andrés Ramos</span>
             </div>
           </div>
         </div>
@@ -589,7 +590,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="text-center mb-12">
           <h1 class="text-4xl font-extrabold text-gray-900 mb-4" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">Catálogo Completo</h1>
           <p class="text-lg text-gray-600 max-w-2xl mx-auto">Usa los filtros de abajo para explorar las 6 experiencias oficiales bilingües de la Cooperativa.</p>
@@ -644,7 +645,7 @@ onMounted(() => {
           <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <p class="text-gray-500 font-bold">No se encontraron experiencias con los filtros seleccionados.</p>
         </div>
-      </main>
+      </div>
     </template>
 
     <!-- ============================================== -->
@@ -659,7 +660,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
         <div class="text-center">
           <h1 class="text-5xl font-extrabold text-gray-900 mb-4" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">Quiénes Somos</h1>
           <p class="text-xl text-gray-600 max-w-2xl mx-auto italic" :class="activeVariant === 'traditional' ? 'font-serif-artisanal' : ''">Identidad Territorial Mapuche y Turismo Cultural Regenerativo</p>
@@ -696,7 +697,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </template>
 
     <!-- ============================================== -->
@@ -711,7 +712,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center mb-12">
           <h1 class="text-5xl font-extrabold text-gray-900 mb-4" :class="activeVariant === 'traditional' ? 'font-serif-artisanal font-bold' : ''">Contacto</h1>
           <p class="text-lg text-gray-600 max-w-2xl mx-auto">Comunícate con nosotros para coordinar visitas de colegios, grupos de empresas o reservas especiales.</p>
@@ -765,7 +766,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </template>
 
     <!-- ============================================== -->
@@ -789,7 +790,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 w-full">
+      <div class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 w-full">
         
         <!-- Contenido Ficha -->
         <div class="lg:col-span-2 space-y-10">
@@ -977,7 +978,7 @@ onMounted(() => {
           />
         </aside>
 
-      </main>
+      </div>
       
       <!-- Servicios Relacionados (Sección 2.2) -->
       <section class="bg-gray-100 py-16 border-t border-gray-200">
@@ -995,6 +996,7 @@ onMounted(() => {
         </div>
       </section>
     </template>
+    </main>
 
     <!-- Footer modularizado -->
     <AppFooter :active-variant="activeVariant" />

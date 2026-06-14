@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-green-newen: var(--color-primary, #2E7D32); 
+  --color-green-newen: var(--color-primary, #1B5E20); 
   --color-gold-newen: var(--color-accent, #F9A825);  
   --color-crema-newen: #F5ECD7; 
   --color-carbon-newen: #1A1A1A; 
@@ -9,7 +9,7 @@
 
 /* Clases de Temas Dinámicos */
 .theme-modern {
-  --color-primary: #2E7D32; /* Verde Institucional */
+  --color-primary: #1B5E20; /* Verde Institucional más oscuro para contraste > 4.5 */
   --color-accent: #F9A825;  /* Acento dorado moderno */
   font-family: 'Poppins', sans-serif;
 }

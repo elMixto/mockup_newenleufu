@@ -35,6 +35,8 @@ const handleMobileNavigate = (route: string) => {
         <img 
           src="/images/logo.webp" 
           alt="Newen Leufu Logo" 
+          width="185"
+          height="48"
           class="h-12 w-auto object-contain mix-blend-multiply" 
           :class="activeVariant === 'traditional' ? 'filter sepia' : ''"
         />
