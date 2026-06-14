@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-green-newen: var(--color-primary, #2E7D32); 
+  --color-gold-newen: var(--color-accent, #F9A825);  
+  --color-crema-newen: #F5ECD7; 
+  --color-carbon-newen: #1A1A1A; 
+}
+
+/* Clases de Temas Dinámicos */
+.theme-modern {
+  --color-primary: #2E7D32; /* Verde Institucional */
+  --color-accent: #F9A825;  /* Acento dorado moderno */
+  font-family: 'Poppins', sans-serif;
+}
+
+.theme-traditional {
+  --color-primary: #2E4A1E; /* Verde musgo oscuro */
+  --color-accent: #8D5524;  /* Tierra arcilla */
+  font-family: 'Lato', sans-serif;
+}
+
+/* Tipografía de Cormorant Garamond exclusiva para títulos del tema tradicional */
+.theme-traditional h1, 
+.theme-traditional h2, 
+.theme-traditional h3, 
+.theme-traditional .font-serif-artisanal {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Separadores winkul Mapuche */
+.winkul-divider {
+  background-image: repeating-linear-gradient(45deg, #8D5524 0, #8D5524 10px, transparent 0, transparent 20px),
+                    repeating-linear-gradient(-45deg, #8D5524 0, #8D5524 10px, transparent 0, transparent 20px);
+  background-size: 20px 20px;
+  height: 20px;
+  opacity: 0.15;
+}
+
+/* Textura sutil de madera/tela para fondo tradicional */
+.wood-texture {
+  background-image: radial-gradient(rgba(141, 85, 36, 0.05) 1px, transparent 0);
+  background-size: 24px 24px;
+}
