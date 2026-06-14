@@ -985,11 +985,19 @@ onMounted(() => {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h3 class="text-2xl font-bold text-gray-900 mb-8" :class="activeVariant === 'traditional' ? 'font-serif-artisanal' : ''">Otras experiencias recomendadas</h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-             <article v-for="exp in experiences.filter(e => e.id !== activeExperience?.id).slice(0,3)" :key="exp.id" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all cursor-pointer p-4 flex gap-4" @click="navigateTo('experience', exp.id)">
-               <img :src="exp.img" :alt="exp.name" class="w-20 h-20 object-cover rounded-lg" />
-               <div class="flex-1 min-w-0">
-                 <h4 class="font-bold text-gray-900 text-sm mb-1 leading-snug truncate" :class="activeVariant === 'traditional' ? 'font-serif-artisanal text-base' : ''">{{ exp.shortName }}</h4>
-                 <p class="text-(--color-green-newen) font-bold text-xs">{{ formatCLP(exp.price) }}</p>
+             <article v-for="exp in experiences.filter(e => e.id !== activeExperience?.id).slice(0,3)" :key="exp.id" class="bg-white rounded-2xl shadow-sm border border-gray-150 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col hover:-translate-y-1" @click="navigateTo('experience', exp.id)">
+               <div class="relative overflow-hidden h-48 bg-gray-200">
+                 <img :src="exp.img" :alt="exp.name" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+               </div>
+               <div class="p-5 flex-1 flex flex-col justify-between">
+                 <div>
+                   <span class="text-[10px] font-bold text-(--color-gold-newen) uppercase tracking-wider mb-1 block">{{ exp.duration }}</span>
+                   <h4 class="font-bold text-gray-900 text-base mb-2 leading-snug line-clamp-2" :class="activeVariant === 'traditional' ? 'font-serif-artisanal text-lg' : ''">{{ exp.name }}</h4>
+                 </div>
+                 <div class="mt-4 border-t border-gray-100 pt-3 flex items-center justify-between">
+                   <span class="text-xs text-gray-500">Desde</span>
+                   <span class="text-(--color-green-newen) font-extrabold text-sm">{{ formatCLP(exp.price) }}</span>
+                 </div>
                </div>
              </article>
           </div>
