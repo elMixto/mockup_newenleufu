@@ -126,7 +126,18 @@ Para garantizar un desarrollo ágil y la correcta implementación del alcance, e
     \end{tabularx}
 \end{table}
 
-\section{6. Presupuesto Estimado y Entregables}
+\section{6. Consideraciones de Seguridad y Privacidad}
+
+La plataforma comercial procesará transacciones financieras y datos personales de turistas nacionales e internacionales. Por lo tanto, el desarrollo de la arquitectura prioriza la seguridad integral desde su diseño ("Security by Design"):
+
+\begin{itemize}
+    \item \textbf{Seguridad de Transacciones (PCI-DSS):} La plataforma no almacena ni procesa directamente números de tarjetas de crédito o débito. Todo el flujo financiero es delegado y tokenizado a través de los servidores seguros de las pasarelas oficiales (Webpay Plus de Transbank para Chile y Stripe para transacciones internacionales), garantizando cumplimiento estricto con los estándares Payment Card Industry Data Security Standard (PCI-DSS).
+    \item \textbf{Cifrado de Extremo a Extremo:} Todo el tráfico entre el turista y la plataforma está protegido obligatoriamente bajo encriptación SSL/TLS de 256 bits, forzando la redirección estricta a \texttt{HTTPS} para mitigar ataques de interceptación (Man-in-the-Middle).
+    \item \textbf{Protección de Datos Personales:} El almacenamiento de la información de reservas (nombres, correos, requerimientos alimentarios) se rige bajo los principios de protección de datos (leyes locales y normativas GDPR para turistas europeos). El panel de administración contará con autenticación robusta y la infraestructura evitará la exposición de bases de datos al internet público.
+    \item \textbf{Infraestructura Resiliente (Anti-DDoS):} Al utilizar una arquitectura de nube global (Edge Computing), la plataforma hereda automáticamente la protección de grado empresarial contra ataques de Denegación de Servicio Distribuido (DDoS), firewalls de aplicaciones web (WAF) y mitigación de bots maliciosos proporcionada por la red de distribución.
+\end{itemize}
+
+\section{7. Presupuesto Estimado y Entregables}
 
 \textit{\textbf{Nota Importante:} La presente propuesta representa un presupuesto estimado basado en el alcance definido. El proyecto contempla un esfuerzo global aproximado de \textbf{60 horas} de ingeniería, enfocándose en la entrega de valor, funcionalidad y activos digitales, más que en el cobro estricto por hora trabajada.}
 
@@ -144,8 +155,8 @@ El desarrollo se ha estructurado en \textbf{6 entregables principales}, consolid
     Módulo 2: Vistas Inmersivas de Experiencias (Videos y Relatos) & \$ 83.333 \\
     Módulo 3: Catálogo Dinámico con Filtros (SPA Reactiva) & \$ 83.333 \\
     Módulo 4: Sistema de Reservas y Calendario Interactivo & \$ 83.334 \\
-    Módulo 5: Pasarela de Pago Unificada (Webpay/Stripe) & \$ 83.334 \\
-    Módulo 6: Integración y Despliegue Global en Cloudflare Pages & \$ 83.333 \\
+    Módulo 5: Pasarela de Pago Unificada y Segura & \$ 83.334 \\
+    Módulo 6: Integración y Despliegue Global en Producción & \$ 83.333 \\
     \hline
     \textbf{Inversión Total Estimada del Proyecto} & \textbf{\$ 500.000} \\
     \hline
@@ -157,12 +168,12 @@ El desarrollo se ha estructurado en \textbf{6 entregables principales}, consolid
 
 Al finalizar y aprobar el desarrollo, la Cooperativa recibirá la propiedad y el control total de la plataforma, incluyendo:
 \begin{itemize}
-    \item \textbf{Código Fuente Total:} Propiedad intelectual y transferencia del repositorio completo alojado en GitHub.
-    \item \textbf{Credenciales de Acceso:} Entrega de usuarios administradores y contraseñas de la cuenta de Cloudflare Pages, las integraciones de pasarelas de pago (Transbank/Stripe) y gestor de contenidos.
-    \item \textbf{Despliegue Configurado:} Sistema en producción 100\% funcional, enlazado correctamente al dominio \texttt{newenleufu.cl} con certificado de seguridad SSL activo.
+    \item \textbf{Código Fuente Total:} Propiedad intelectual y transferencia del repositorio con el código fuente completo.
+    \item \textbf{Credenciales de Acceso:} Entrega de usuarios administradores y contraseñas de la infraestructura de alojamiento, servicios de pago y panel de gestión.
+    \item \textbf{Sitio Hosteado y Configurado:} Sistema alojado en producción, 100\% funcional y enlazado correctamente al dominio \texttt{newenleufu.cl} con certificado de seguridad SSL activo.
 \end{itemize}
 
 \vspace{0.3cm}
-\noindent \textit{* Este presupuesto estimado de \$500.000 CLP cubre de extremo a extremo la implementación del alcance completo descrito, garantizando una arquitectura moderna de alto rendimiento, libre de mantenciones costosas de servidores (al usar Cloudflare Pages) y orientada a maximizar la conversión de ventas turísticas internacionales y locales.}
+\noindent \textit{* Este presupuesto estimado de \$500.000 CLP cubre de extremo a extremo la implementación del alcance completo descrito, garantizando una arquitectura moderna de alto rendimiento, libre de mantenciones costosas de servidores tradicionales y orientada a maximizar la conversión de ventas turísticas internacionales y locales.}
 
 \end{document}
