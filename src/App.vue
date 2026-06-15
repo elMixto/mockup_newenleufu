@@ -1440,29 +1440,20 @@ onMounted(() => {
     <!-- Footer modularizado -->
     <AppFooter :active-variant="activeVariant" />
 
-    <!-- FLOATING INTERACTIVE DESIGN SWITCHER -->
-    <div class="fixed bottom-6 left-6 z-50 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-gray-200 flex flex-col gap-2">
-      <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest block text-center border-b border-gray-100 pb-1.5 mb-1">EVALUAR PROPUESTAS</span>
-      <div class="flex gap-2">
-        <button 
-          @click="toggleVariant('traditional')"
-          class="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border-2"
-          :class="activeVariant === 'traditional' 
-            ? 'bg-(--color-green-newen) text-(--color-crema-newen) border-(--color-green-newen)' 
-            : 'bg-stone-100 text-stone-700 hover:bg-stone-200 border-transparent'"
-        >
-          Raíces Vivas (P1)
-        </button>
-        <button 
-          @click="toggleVariant('modern')"
-          class="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border-2"
-          :class="activeVariant === 'modern' 
-            ? 'bg-(--color-green-newen) text-white border-transparent' 
-            : 'bg-stone-100 text-stone-700 hover:bg-stone-200 border-transparent'"
-        >
-          Moderna (P2)
-        </button>
-      </div>
+    <!-- FLOATING INTERACTIVE DESIGN SWITCHER (COMPACT PILL TOGGLE) -->
+    <div class="fixed bottom-6 left-6 z-50">
+      <button 
+        @click="toggleVariant(activeVariant === 'traditional' ? 'modern' : 'traditional')"
+        class="bg-white/95 backdrop-blur-md border border-gray-200 shadow-2xl px-4 py-2.5 rounded-full flex items-center gap-2 transition-all hover:scale-105 active:scale-95 text-xs font-extrabold text-gray-700 group focus:outline-none focus:ring-2 focus:ring-(--color-green-newen)/30"
+        title="Alternar entre Propuesta 1 (Raíces Vivas) y Propuesta 2 (Experiencia Moderna)"
+      >
+        <svg class="w-4 h-4 text-(--color-green-newen) group-hover:rotate-12 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 9h-1m14.071+8.071l-.707-.707m-12.728-12.728l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <span class="tracking-wide">
+          Diseño: <strong class="text-(--color-green-newen)">{{ activeVariant === 'traditional' ? 'Raíces Vivas (P1)' : 'Moderna (P2)' }}</strong>
+        </span>
+      </button>
     </div>
 
   </div>
