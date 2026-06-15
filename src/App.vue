@@ -474,6 +474,11 @@ onMounted(() => {
   if (variantParam === 'traditional' || variantParam === 'modern') {
     activeVariant.value = variantParam;
   }
+  
+  // Activar la visibilidad una vez cargada la app para evitar parpadeos de maquetación (FOUC)
+  setTimeout(() => {
+    document.getElementById('app')?.classList.add('ready');
+  }, 100);
 });
 </script>
 
