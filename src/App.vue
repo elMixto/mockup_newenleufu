@@ -973,7 +973,7 @@ onMounted(() => {
                   </tr>
                   <tr>
                     <td class="px-6 py-4 font-bold text-gray-900 bg-gray-50/30">Participantes Mínimo / Máximo</td>
-                    <td class="px-6 py-4">Mínimo: {{ activeExperience.minParticipants }} pasajeros / Máximo: {{ activeExperience.maxParticipants }} pasajeros</td>
+                    <td class="px-6 py-4">Mínimo: {{ activeExperience.minParticipants }} participantes / Máximo: {{ activeExperience.maxParticipants }} participantes</td>
                   </tr>
                   <tr>
                     <td class="px-6 py-4 font-bold text-gray-900 bg-gray-50/30">Idioma de la Guía</td>
