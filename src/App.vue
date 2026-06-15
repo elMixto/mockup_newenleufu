@@ -356,7 +356,7 @@ const navigateTo = (route: string, id?: number) => {
     currentMediaIndex.value = 0;
     isVideoPlaying.value = false;
   }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 };
 
 // Mock data para el calendario de disponibilidad de Junio 2026 integrado en la pasarela de reservas
@@ -413,7 +413,7 @@ const openBookingGateway = (experienceId: number) => {
   isPaymentSuccess.value = false;
   isPaymentProcessing.value = false;
   currentRoute.value = 'checkout';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 };
 
 // Simulación de procesamiento de pago
@@ -422,7 +422,7 @@ const processPaymentMock = () => {
   setTimeout(() => {
     isPaymentProcessing.value = false;
     isPaymentSuccess.value = true;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }, 2500); // 2.5s de simulación de pasarela Webpay/Stripe
 };
 
@@ -431,7 +431,7 @@ const closeCheckoutModal = () => {
   currentRoute.value = 'home';
   isPaymentSuccess.value = false;
   isPaymentProcessing.value = false;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 };
 
 // Image gallery controllers
